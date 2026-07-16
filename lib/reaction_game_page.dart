@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screen_change_reaction_page.dart';
 import 'dot_page.dart';
-import 'neuro_tracker_page.dart';
+import 'dot_tracker_page.dart';
 import 'anticipation_page.dart';
 
 
@@ -80,7 +80,7 @@ class ReactionGamePage extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => const NeuroTrackerGame()),
                   );
                 },
-                child: const Text('Neuro Tracker',
+                child: const Text('Dot Tracker',
                   style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 0, 0, 0)),
                 ),
               ),

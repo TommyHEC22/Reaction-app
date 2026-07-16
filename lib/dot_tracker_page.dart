@@ -200,7 +200,7 @@ class _NeuroTrackerGameState extends State<NeuroTrackerGame>
 
   Color _ballColour(_Ball b) {
     if (_phase == Phase.memorize || _phase == Phase.result) {
-      return b.isTarget ? _targetRed : _neutral;
+      return b.isTarget ? _targetRed : const Color.fromRGBO(100, 100, 100, 1);
     }
     return _neutral; // tracking + select: all identical
   }
@@ -245,13 +245,20 @@ class _NeuroTrackerGameState extends State<NeuroTrackerGame>
 
   @override
   Widget build(BuildContext context) {
+    // Drop the box below the status bar / camera, and leave room for the
+    // home icon. Same gap is mirrored at the bottom so the box stays centred.
+    final inset = MediaQuery.of(context).padding.top + 56;
+
     return Scaffold(
       backgroundColor: _bgGreen,
       body: LayoutBuilder(
         builder: (context, constraints) {
+          final boxWidth = constraints.maxWidth;
+          final boxHeight = constraints.maxHeight - inset * 2;
+
           if (!_initialized) {
             _initialized = true;
-            _playSize = Size(constraints.maxWidth, constraints.maxHeight);
+            _playSize = Size(boxWidth, boxHeight); // physics uses the BOX now
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (mounted) _setupGame();
             });
@@ -259,40 +266,59 @@ class _NeuroTrackerGameState extends State<NeuroTrackerGame>
 
           return Stack(
             children: [
-              for (final ball in _balls)
-                Positioned(
-                  left: ball.position.dx - _r,
-                  top: ball.position.dy - _r,
-                  child: GestureDetector(
-                    onTap: () => _onBallTap(ball),
-                    child: Container(
-                      width: _ballSize,
-                      height: _ballSize,
-                      decoration: BoxDecoration(
-                        color: _ballColour(ball),
-                        shape: BoxShape.circle,
-                        border: _ballBorder(ball),
-                      ),
+              // ---- the black play box ----
+              Positioned(
+                left: 0,
+                right: 0,
+                top: inset,
+                height: boxHeight,
+                child: ClipRect(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Color.fromARGB(255, 175, 175, 175), width: 1),
                     ),
-                  ),
-                ),
+                    child: Stack(
+                      children: [
+                        for (final ball in _balls)
+                          Positioned(
+                            left: ball.position.dx - _r,
+                            top: ball.position.dy - _r,
+                            child: GestureDetector(
+                              onTap: () => _onBallTap(ball),
+                              child: Container(
+                                width: _ballSize,
+                                height: _ballSize,
+                                decoration: BoxDecoration(
+                                  color: _ballColour(ball),
+                                  shape: BoxShape.circle,
+                                  border: _ballBorder(ball),
+                                ),
+                              ),
+                            ),
+                          ),
 
-              // fixation dot — fixed centre point to keep your eyes on
-              const IgnorePointer(
-                child: Center(
-                  child: SizedBox(
-                    width: 12,
-                    height: 12,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(255, 235, 59, 1),
-                        shape: BoxShape.circle,
-                      ),
+                        // fixation dot — centre of the box
+                        const IgnorePointer(
+                          child: Center(
+                            child: SizedBox(
+                              width: 12,
+                              height: 12,
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                  color: Color.fromRGBO(255, 235, 59, 1),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
 
+              // ---- chrome, in the gaps above/below the box ----
               SafeArea(
                 child: IconButton(
                   icon: const Icon(Icons.home, color: Colors.white),
@@ -324,8 +350,7 @@ class _NeuroTrackerGameState extends State<NeuroTrackerGame>
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 24),
                       child: ElevatedButton(
-                        onPressed:
-                            _phase == Phase.select ? _reveal : _restart,
+                        onPressed: _phase == Phase.select ? _reveal : _restart,
                         child: Text(
                           _phase == Phase.select ? 'Reveal' : 'Play again',
                         ),
@@ -339,4 +364,4 @@ class _NeuroTrackerGameState extends State<NeuroTrackerGame>
       ),
     );
   }
-}
+    }

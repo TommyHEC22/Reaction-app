@@ -97,7 +97,7 @@ class _DotReactionGameState extends State<DotReactionGame> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 21, 177, 0),
+      backgroundColor: const Color.fromARGB(255, 175, 175, 175),
       body: LayoutBuilder(
         builder: (context, constraints) {
           final left = _dotXFraction * (constraints.maxWidth - _dotSize);
@@ -133,7 +133,7 @@ class _DotReactionGameState extends State<DotReactionGame> {
                       width: _dotSize,
                       height: _dotSize,
                       decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 66, 66, 66),
+                        color: Color.fromARGB(255, 140, 13, 13),
                         shape: BoxShape.circle,
                       ),
                     ),

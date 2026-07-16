@@ -15,11 +15,11 @@ enum _Phase { preview, running, result }
 class _AnticipationGameState extends State<AnticipationGame>
     with SingleTickerProviderStateMixin {
   // --- colours ---
-  static const Color _bg = Color(0xFF101318);
-  static const Color _accent = Color(0xFF3DD6C4); // path (visible)
-  static const Color _ballCol = Color(0xFFFF7A45); // moving ball
+  static const Color _bg = Color.fromARGB(255, 100, 100, 100);
+  static const Color _accent = ui.Color.fromARGB(255, 255, 255, 255); // path (visible)
+  static const Color _ballCol = ui.Color.fromARGB(255, 194, 12, 12); // moving ball
   static const Color _targetCol = Color(0xFFFFD54F); // end marker
-  static const Color _revealCol = Color(0xFFFF3B6B); // where it really was
+  static const Color _revealCol = Color.fromARGB(255, 194, 12, 12); // where it really was
 
   static const double _ballRadius = 12; // small ball, lots of room
 
